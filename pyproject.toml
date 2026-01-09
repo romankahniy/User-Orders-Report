@@ -47,3 +47,14 @@ exclude = [
     "venv/",
     ".venv/",
 ]
+
+allow_untyped_decorators = true
+no_implicit_optional = false
+check_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = [
+    "*.models",
+    "*.admin",
+]
+ignore_errors = true

@@ -1,10 +1,12 @@
-from decimal import Decimal
 from datetime import datetime, timedelta
+from decimal import Decimal
+
 from django.test import TestCase
 from django.utils import timezone
-from users.models import User
+
 from orders.models import Order, OrderItem1, OrderItem2
 from orders.reports import ReportService
+from users.models import User
 
 
 class ReportServiceTestCase(TestCase):

@@ -1,8 +1,10 @@
 from decimal import Decimal
+
 from django.test import TestCase
 from django.utils import timezone
-from users.models import User
+
 from orders.models import Order, OrderItem1, OrderItem2
+from users.models import User
 
 
 class UserQuerySetTestCase(TestCase):

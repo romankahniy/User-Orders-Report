@@ -1,11 +1,14 @@
 from decimal import Decimal
+
 from django.test import TestCase
-from django.utils import timezone
 from django.urls import reverse
-from rest_framework.test import APIClient
+from django.utils import timezone
+
 from rest_framework import status
-from users.models import User
+from rest_framework.test import APIClient
+
 from orders.models import Order, OrderItem1, OrderItem2
+from users.models import User
 
 
 class UserAPITestCase(TestCase):

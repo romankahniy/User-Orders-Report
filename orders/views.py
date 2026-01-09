@@ -1,19 +1,21 @@
 from datetime import datetime, timedelta
-from rest_framework import viewsets, filters
+
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework import filters, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema, OpenApiParameter
-from drf_spectacular.types import OpenApiTypes
+
 from .models import Order, OrderItem1, OrderItem2
+from .reports import ReportService
 from .serializers import (
-    OrderSerializer,
     OrderDetailSerializer,
     OrderItem1Serializer,
     OrderItem2Serializer,
+    OrderSerializer,
     ReportSerializer,
 )
-from .reports import ReportService
 
 
 class OrderViewSet(viewsets.ModelViewSet):

@@ -1,7 +1,8 @@
 import uuid
-from django.db import models
+
 from django.contrib.auth.models import AbstractUser
-from django.db.models import Count, Sum, F, DecimalField
+from django.db import models
+from django.db.models import Count, DecimalField, F, Sum
 from django.db.models.functions import Coalesce
 
 

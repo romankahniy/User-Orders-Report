@@ -1,10 +1,12 @@
 from datetime import timedelta
 from decimal import Decimal
-from random import randint, choice
+from random import choice, randint
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from users.models import User
+
 from orders.models import Order, OrderItem1, OrderItem2
+from users.models import User
 
 
 class Command(BaseCommand):

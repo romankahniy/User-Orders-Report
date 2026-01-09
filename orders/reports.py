@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import List, Dict, Any, Literal
-from django.db.models import Count, Sum, Q, F, DecimalField
-from django.db.models.functions import Coalesce, TruncDate, TruncWeek, TruncMonth
-from users.models import User
+from typing import Any, Dict, List, Literal
+
+from django.db.models import Count, DecimalField, F, Q, Sum
+from django.db.models.functions import Coalesce, TruncDate, TruncMonth, TruncWeek
+
 from orders.models import Order, OrderItem1, OrderItem2
+from users.models import User
 
 PeriodType = Literal["daily", "weekly", "monthly"]
 

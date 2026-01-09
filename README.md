@@ -453,11 +453,3 @@ For production deployment:
 6. Configure static file serving
 7. Set up proper logging
 8. Use a production WSGI server (gunicorn, uWSGI)
-
-## License
-
-This project is provided as a technical assessment solution.
-
-## Support
-
-For issues or questions, please refer to the project documentation or contact the development team.

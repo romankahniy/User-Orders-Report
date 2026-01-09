@@ -1,0 +1,198 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements-dev.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+
+    - name: Run flake8
+      run: flake8 .
+
+    - name: Run black (check only)
+      run: black --check .
+
+    - name: Run isort (check only)
+      run: isort --check-only .
+
+    - name: Run pylint
+      run: pylint users orders reporting --exit-zero
+
+    - name: Run mypy
+      run: mypy users orders reporting --ignore-missing-imports
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: test_reporting_db
+          POSTGRES_USER: reporting_user
+          POSTGRES_PASSWORD: reporting_pass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-django pytest-cov
+
+    - name: Create migrations
+      env:
+        DB_NAME: test_reporting_db
+        DB_USER: reporting_user
+        DB_PASSWORD: reporting_pass
+        DB_HOST: localhost
+        DB_PORT: 5432
+        SECRET_KEY: test-secret-key-for-ci
+        DEBUG: 'True'
+      run: |
+        python manage.py makemigrations users || echo "Users migrations exist"
+        python manage.py makemigrations orders || echo "Orders migrations exist"
+
+    - name: Run migrations
+      env:
+        DB_NAME: test_reporting_db
+        DB_USER: reporting_user
+        DB_PASSWORD: reporting_pass
+        DB_HOST: localhost
+        DB_PORT: 5432
+        SECRET_KEY: test-secret-key-for-ci
+        DEBUG: 'True'
+      run: python manage.py migrate
+
+    - name: Run tests
+      env:
+        DB_NAME: test_reporting_db
+        DB_USER: reporting_user
+        DB_PASSWORD: reporting_pass
+        DB_HOST: localhost
+        DB_PORT: 5432
+        SECRET_KEY: test-secret-key-for-ci
+        DEBUG: 'True'
+      run: python manage.py test
+
+    - name: Run tests with coverage
+      env:
+        DB_NAME: test_reporting_db
+        DB_USER: reporting_user
+        DB_PASSWORD: reporting_pass
+        DB_HOST: localhost
+        DB_PORT: 5432
+        SECRET_KEY: test-secret-key-for-ci
+        DEBUG: 'True'
+      run: |
+        pytest --cov=users --cov=orders --cov-report=xml --cov-report=term
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+
+  security:
+    name: Security Checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+
+    - name: Run bandit
+      run: bandit -r users orders reporting -ll
+
+    - name: Run safety check
+      run: safety check --json || true
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image
+      run: docker compose build
+
+    - name: Start services
+      run: docker compose up -d
+
+    - name: Wait for services
+      run: sleep 10
+
+    - name: Create migrations in Docker
+      run: |
+        docker compose exec -T web python manage.py makemigrations users || echo "OK"
+        docker compose exec -T web python manage.py makemigrations orders || echo "OK"
+
+    - name: Run migrations in Docker
+      run: docker compose exec -T web python manage.py migrate
+
+    - name: Run tests in Docker
+      run: docker compose exec -T web python manage.py test
+
+    - name: Stop services
+      run: docker compose down

@@ -1,0 +1,23 @@
+[flake8]
+max-line-length = 120
+exclude =
+    .git,
+    __pycache__,
+    */migrations/*,
+    .venv,
+    venv,
+    env,
+    */staticfiles/*,
+    */media/*,
+    */static/*,
+    .pytest_cache,
+    .mypy_cache,
+    node_modules,
+    build,
+    dist
+ignore =
+    E203,  # whitespace before ':'
+    E501,  # line too long (handled by max-line-length)
+    W503,  # line break before binary operator
+per-file-ignores =
+    __init__.py:F401

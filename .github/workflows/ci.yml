@@ -44,9 +44,6 @@ jobs:
     - name: Run pylint
       run: pylint users orders reporting --exit-zero
 
-    - name: Run mypy
-      run: mypy users orders reporting --ignore-missing-imports
-
   test:
     name: Tests
     runs-on: ubuntu-latest

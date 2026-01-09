@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import List, Dict, Any, Literal
-from django.db.models import Count, Sum, Q, F, DecimalField, DateField
+from django.db.models import Count, Sum, Q, F, DecimalField
 from django.db.models.functions import Coalesce, TruncDate, TruncWeek, TruncMonth
 from users.models import User
 from orders.models import Order, OrderItem1, OrderItem2

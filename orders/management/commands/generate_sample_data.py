@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 from random import randint, choice
 from django.core.management.base import BaseCommand
@@ -96,15 +96,11 @@ class Command(BaseCommand):
                     )
                     items2_created += 1
 
-        self.stdout.write(self.style.SUCCESS(
-            f'\nSample data generated successfully!'
-        ))
+        self.stdout.write(self.style.SUCCESS('\nSample data generated successfully!'))
         self.stdout.write(f'Users created: {users_created}')
         self.stdout.write(f'Orders created: {orders_created}')
         self.stdout.write(f'OrderItem1 created: {items1_created}')
         self.stdout.write(f'OrderItem2 created: {items2_created}')
 
-        self.stdout.write(self.style.SUCCESS(
-            f'\nYou can now generate reports using:'
-        ))
+        self.stdout.write(self.style.SUCCESS('\nYou can now generate reports using:'))
         self.stdout.write('python manage.py generate_report --period daily')

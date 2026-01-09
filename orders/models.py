@@ -5,19 +5,15 @@ from django.conf import settings
 
 class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='orders',
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="orders", on_delete=models.CASCADE)
     created_at = models.DateTimeField()
 
     class Meta:
-        db_table = 'orders_order'
-        ordering = ['-created_at']
+        db_table = "orders_order"
+        ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=['created_at']),
-            models.Index(fields=['user', 'created_at']),
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["user", "created_at"]),
         ]
 
     def __str__(self):
@@ -25,20 +21,16 @@ class Order(models.Model):
 
 
 class OrderItem1(models.Model):
-    order = models.ForeignKey(
-        Order,
-        related_name='items1',
-        on_delete=models.CASCADE
-    )
+    order = models.ForeignKey(Order, related_name="items1", on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField()
 
     class Meta:
-        db_table = 'orders_orderitem1'
-        ordering = ['-created_at']
+        db_table = "orders_orderitem1"
+        ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=['created_at']),
-            models.Index(fields=['order', 'created_at']),
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["order", "created_at"]),
         ]
 
     def __str__(self):
@@ -46,21 +38,17 @@ class OrderItem1(models.Model):
 
 
 class OrderItem2(models.Model):
-    order = models.ForeignKey(
-        Order,
-        related_name='items2',
-        on_delete=models.CASCADE
-    )
+    order = models.ForeignKey(Order, related_name="items2", on_delete=models.CASCADE)
     placement_price = models.DecimalField(max_digits=10, decimal_places=2)
     article_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField()
 
     class Meta:
-        db_table = 'orders_orderitem2'
-        ordering = ['-created_at']
+        db_table = "orders_orderitem2"
+        ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=['created_at']),
-            models.Index(fields=['order', 'created_at']),
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["order", "created_at"]),
         ]
 
     def __str__(self):

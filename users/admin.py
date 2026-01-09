@@ -5,7 +5,7 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('email', 'username', 'is_active', 'date_joined', 'is_staff')
-    list_filter = ('is_active', 'is_staff', 'date_joined')
-    search_fields = ('email', 'username')
-    ordering = ('-date_joined',)
+    list_display = ("email", "username", "is_active", "date_joined", "is_staff")
+    list_filter = ("is_active", "is_staff", "date_joined")
+    search_fields = ("email", "username")
+    ordering = ("-date_joined",)

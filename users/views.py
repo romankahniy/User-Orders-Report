@@ -10,16 +10,14 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
-    filterset_fields = ['is_active', 'date_joined']
-    search_fields = ['username', 'email']
-    ordering_fields = ['date_joined', 'username', 'email']
-    ordering = ['-date_joined']
+    filterset_fields = ["is_active", "date_joined"]
+    search_fields = ["username", "email"]
+    ordering_fields = ["date_joined", "username", "email"]
+    ordering = ["-date_joined"]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def statistics(self, request):
-        queryset = self.filter_queryset(
-            User.objects.with_statistics()
-        )
+        queryset = self.filter_queryset(User.objects.with_statistics())
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -29,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserStatisticsSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=["get"])
     def user_statistics(self, request, pk=None):
         user = User.objects.with_statistics().get(pk=pk)
         serializer = UserStatisticsSerializer(user)

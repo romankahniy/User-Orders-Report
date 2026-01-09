@@ -3,6 +3,6 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'reporting.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "reporting.settings")
 
 application = get_wsgi_application()
